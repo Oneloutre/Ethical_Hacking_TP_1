@@ -23,3 +23,24 @@ Cela fait, on démarre une kali sur laquelle tout se passera.
 
 ## 2. Spiking (trouver la vulnérabilité) <a name="spiking"></a>
 
+On va commencer par chercher la vulnérablilité dans le programme. Pour cela, on va utiliser le script `generic_send_tcp` fourni dans kali.
+
+```spk 
+fichier stats.spk
+
+
+s_readline();
+s_string("STATS");
+s_string_variable("0");
+```
+
+on envoie:
+
+```bash
+generic_send_tcp ip_windows 9999 stats.spk 0 0
+```
+
+
+[fuzzing avec STATS](assets/1.png)
+
+On voit que le programme ne crash pas, essayons de modifier le fichier.
