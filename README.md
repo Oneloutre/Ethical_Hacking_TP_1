@@ -41,7 +41,7 @@ generic_send_tcp ip_windows 9999 stats.spk 0 0
 ```
 
 
-[fuzzing avec STATS](assets/1.png)
+![fuzzing avec STATS](assets/1.png)
 
 
 On voit que le programme ne crash pas, essayons de modifier la commande.
@@ -60,7 +60,7 @@ generic_send_tcp ip_windows 9999 stats.spk 0 0
 
 Parfait ! On s'aperçoit que le programme crashe. On a donc trouvé la vulnérabilité.
 
-[Programme crash](assets/2.png)
+![Programme crash](assets/2.png)
 
 ## 3. Fuzzing (créer un PoC) <a name="fuzzing"></a>
 
@@ -94,5 +94,12 @@ while True:
 On lance le script et on attend que le programme crash.  
 Ici, on voit que le programme crash à 2000 bytes.  
 
-[Programme crash à 2000 bytes](assets/3.png)
+![Programme crash à 2000 bytes](assets/3.png)
+
+
+On retourne sur notre machine victime et on lance vulnserver attaché à immunity debugger afin de déterminer l'offset pour voir où ça crashe.
+![Immunity Debugger](assets/5.png) POUR NOUS 
+
+## 4. Chercher l'offset <a name="offset"></a>
+
 
