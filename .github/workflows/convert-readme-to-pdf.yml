@@ -3,7 +3,7 @@ name: Convert README.md to PDF and Upload to Release
 on:
   push:
     branches:
-      - main
+      - master
 
 jobs:
   build:
